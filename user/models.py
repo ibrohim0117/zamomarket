@@ -6,9 +6,6 @@ from datetime import timedelta
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
-VIA_EMAIL = 'via_email'
-VIA_PHONE = 'via_phone'
-
 
 class BaseCreatedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,7 +26,7 @@ class User(AbstractUser, BaseCreatedModel):
         return self.username
 
     def create_code(self):
-        code = "".join([str(random.randint(0, 100) % 10) for _ in range(4)])
+        code = "".join([str(random.randint(1, 100) % 10) for _ in range(4)])
         UserConfirmation.objects.create(
             code=code,
             user_id=self.id
