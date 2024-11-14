@@ -1,4 +1,7 @@
 from rest_framework import status
+from datetime import datetime
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -44,6 +47,7 @@ class VerifyUserAPIView(APIView):
         if serializer.is_valid():
             code = serializer.validated_data.get('code')
             print(user, code)
+            self.check_verify_code(user, code)
             return Response(
                 data={
                     'success': True,
@@ -53,4 +57,19 @@ class VerifyUserAPIView(APIView):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def check_verify_code(user, code):
+        # print(user.codes.all())
+        verifies = user.codes.filter(expiration_time__gte=timezone.now(), code=code, is_confirmed=False)
+        print(verifies.exists())
+        if not verifies.exists():
+            data = {
+                'message': 'Tasdiqlash kodi xato yoki eskirgan'
+            }
+            raise ValidationError(data)
+        verifies.update(is_confirmed=True)
+        user.is_verified = True
+        user.save()
+        return True
 
