@@ -51,4 +51,7 @@ class UserConfirmation(BaseCreatedModel):
     expiration_time = models.DateTimeField(default=timezone.now() + timedelta(minutes=10))
     is_confirmed = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.code
+
 
