@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
-from user.serializers import UserRegistrationSerializer
+from user.serializers import UserRegistrationSerializer, UserConfirmationSerializer
 
 
 class UserRegistrationAPIView(APIView):
@@ -29,6 +28,29 @@ class UserRegistrationAPIView(APIView):
                 }
             }
             return Response(data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyUserAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        request=UserConfirmationSerializer
+    )
+    def post(self, request):
+        user = request.user
+        serializer = UserConfirmationSerializer(data=request.data)
+        if serializer.is_valid():
+            code = serializer.validated_data.get('code')
+            print(user, code)
+            return Response(
+                data={
+                    'success': True,
+                    'access': user.token()['access'],
+                    'refresh': user.token()['refresh_token']
+                }
+            )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

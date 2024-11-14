@@ -26,3 +26,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.create_code()
         return user
 
+
+class UserConfirmationSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=4, required=True)
+
