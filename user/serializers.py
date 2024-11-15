@@ -1,4 +1,6 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from user.models import User
 
@@ -29,4 +31,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserConfirmationSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=4, required=True)
+
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=25, required=True)
+    password = serializers.CharField(max_length=256, required=True)
+
+    def validate(self, attrs):
+        user = authenticate(username=attrs.get('username'), password=attrs.get('password'))
+        if user and user.is_verified:
+            refresh = RefreshToken.for_user(user)
+            return {
+                'refresh_token': str(refresh),
+                'access_token': str(refresh.access_token)
+            }
+        else:
+            raise serializers.ValidationError("Login yoki parol xato yoki foydalanuvchi tasdiqlanmagan.")
+        # return super().validate(attrs)
+
+
 
