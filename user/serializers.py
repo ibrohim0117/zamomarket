@@ -50,4 +50,10 @@ class UserLoginSerializer(serializers.Serializer):
         # return super().validate(attrs)
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'phone', 'first_name', 'last_name', 'date_of_birth', 'photo']
+        read_only_fields = ['username', 'is_verified']
+
 

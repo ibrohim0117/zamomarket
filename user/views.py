@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
 from user.serializers import (
     UserRegistrationSerializer, UserConfirmationSerializer,
-    UserLoginSerializer
+    UserLoginSerializer, UserProfileSerializer
 )
 
 
@@ -87,4 +87,33 @@ class UserLoginView(APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    @extend_schema(
+        request=UserProfileSerializer
+    )
+    def get(self, request):
+        serializer = UserProfileSerializer(request.user)
+        data = {
+            'user': serializer.data
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=UserProfileSerializer
+    )
+    def put(self, request):
+        serializer = UserProfileSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            data = {
+                'message': 'User profile updated successfully',
+                'user': serializer.data
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
