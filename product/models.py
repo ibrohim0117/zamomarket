@@ -14,7 +14,7 @@ class Category(BaseCreatedModel):
     def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
         self.slug = slugify(self.name)
         while Category.objects.filter(slug=self.slug).exists():
-            self.slug += '-' + str(uuid.uuid4()).split()[-1]
+            self.slug += '-' + str(uuid.uuid4()).split('-')[-1]
         super().save(*args, force_insert=force_insert, force_update=force_update, using=using,
                      update_fields=update_fields)
 
@@ -30,7 +30,7 @@ class SubCategory(BaseCreatedModel):
     def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
         self.slug = slugify(self.name)
         while SubCategory.objects.filter(slug=self.slug).exists():
-            self.slug += '-' + str(uuid.uuid4()).split()[-1]
+            self.slug += '-' + str(uuid.uuid4()).split('-')[-1]
         super().save(*args, force_insert=force_insert, force_update=force_update, using=using,
                      update_fields=update_fields)
 
@@ -59,7 +59,7 @@ class Product(BaseCreatedModel):
     def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
         self.slug = slugify(self.name)
         while Product.objects.filter(slug=self.slug).exists():
-            self.slug += '-' + str(uuid.uuid4()).split()[-1]
+            self.slug += '-' + str(uuid.uuid4()).split('-')[-1]
         super().save(*args, force_insert=force_insert, force_update=force_update, using=using,
                      update_fields=update_fields)
 
