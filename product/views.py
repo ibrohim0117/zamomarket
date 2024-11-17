@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 
 from product.filters import ProductFilter
-from product.models import Product, SubCategory, Category
-from product.serializers import ProductListSerializer, SubCategoryListSerializer, CategoryListSerializer
+from product.models import Product, SubCategory, Category, Comment
+from product.serializers import ProductListSerializer, SubCategoryListSerializer, CategoryListSerializer, \
+    CommentSerializer
 
 
 # rot66rot
@@ -19,7 +20,6 @@ class ProductListView(ListAPIView):
     search_fields = ['name', 'description']
 
 
-
 class SubCategoryListView(ListAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategoryListSerializer
@@ -28,3 +28,21 @@ class SubCategoryListView(ListAPIView):
 class CategoryListView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
+
+
+class CommentCreateView(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        slug = self.kwargs.get('slug')
+        product = Product.objects.get(slug=slug)
+        print(slug)
+        print(product)
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+        serializer.save(product=product, user=user)
+        super().perform_create(serializer)
+

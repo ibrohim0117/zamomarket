@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from product.models import Product, Category, SubCategory, Tag, ProductImage
+from product.models import Product, Category, SubCategory, Tag, ProductImage, Comment
 
 # admin.site.register(Product)
 admin.site.register(Category)
@@ -15,6 +15,11 @@ class ProductImageInline(admin.StackedInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'count', 'sale', 'is_active')
+    list_display = ('name', 'slug', 'price', 'count', 'sale', 'is_active')
     search_fields = ('name', 'price', 'count')
     inlines = [ProductImageInline]
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'username', 'rating', 'text')
