@@ -64,4 +64,24 @@ class ProductImage(BaseCreatedModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
 
 
+class Comment(BaseCreatedModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=True)
+    username = models.CharField(max_length=25, blank=True)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    text = models.TextField(blank=True)
+
+    def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.user:
+            self.username = self.user.username
+        else:
+            self.username = 'AnonymousUser'
+        super().save(*args, force_insert=force_insert, force_update=force_update, using=using,
+                     update_fields=update_fields)
+
+
+
+
+
+
 
