@@ -6,7 +6,7 @@ from product.models import Product, Category, SubCategory, Comment
 class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'slug',  'count', 'sale', 'subcategory', 'is_active', 'comments']
+        fields = ['name', 'slug',  'count', 'sale', 'subcategory', 'is_active']
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class SubCategoryListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class CommentCreateSerializer(serializers.ModelSerializer):
     product = serializers.CharField(max_length=25, read_only=True)
     user = serializers.CharField(max_length=25, read_only=True)
     username = serializers.CharField(max_length=25, read_only=True)
@@ -29,3 +29,11 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['product', 'user', 'rating', 'username', 'text']
+
+
+class CommentListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['product', 'user', 'rating', 'username', 'text']
+
+
