@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 from .views import (
     ProductListView, CategoryListView,
-    SubCategoryListView, CommentCreateView, ProductCommentListView
+    SubCategoryListView, CommentCreateView,
+    ProductCommentListView
 )
 
 urlpatterns = [

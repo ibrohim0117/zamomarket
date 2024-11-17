@@ -88,6 +88,25 @@ class Comment(BaseCreatedModel):
                      update_fields=update_fields)
 
 
+class Cart(BaseCreatedModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='carts')
+    user = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    quantity = models.IntegerField(validators=[MinValueValidator(1)], default=1)
+    now_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.product:
+            self.now_price = self.product.price
+        super().save(*args, force_insert=force_insert, force_update=force_update, using=using,
+                     update_fields=update_fields)
+
+    @property
+    def total_price(self):
+        return self.quantity * self.now_price
+
+
+
+
 
 
 
