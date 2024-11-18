@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     ProductListView, CategoryListView,
     SubCategoryListView, CommentCreateView,
-    ProductCommentListView
+    ProductCommentListView, AddToCartView, CartListView
 )
 
 urlpatterns = [
@@ -19,4 +19,8 @@ urlpatterns = [
     # comment
     path('create-comment/<slug:slug>/', CommentCreateView.as_view(), name='comment_create'),
     path('comments/<slug:slug>/', ProductCommentListView.as_view(), name='comment_list'),
+
+    # cart
+    path('cart/<slug:slug>/', AddToCartView.as_view(), name='cart_add'),
+    path('carts/', CartListView.as_view(), name='cart_list')
 ]

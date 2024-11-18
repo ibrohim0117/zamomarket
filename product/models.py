@@ -104,6 +104,9 @@ class Cart(BaseCreatedModel):
     def total_price(self):
         return self.quantity * self.now_price
 
+    def __str__(self):
+        return f'{self.product}'
+
 
 
 

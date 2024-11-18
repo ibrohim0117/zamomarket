@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from product.models import Product, Category, SubCategory, Tag, ProductImage, Comment
+from product.models import Product, Category, SubCategory, Tag, ProductImage, Comment, Cart
 
 # admin.site.register(Product)
 admin.site.register(Category)
@@ -23,3 +23,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'username', 'rating', 'text')
+
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'quantity', 'now_price', 'total_price')
