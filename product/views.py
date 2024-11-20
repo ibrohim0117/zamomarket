@@ -12,7 +12,8 @@ from product.filters import ProductFilter
 from product.models import Product, SubCategory, Category, Comment, Cart
 from product.serializers import (
     ProductListSerializer, SubCategoryListSerializer,
-    CategoryListSerializer, CommentCreateSerializer, CommentListSerializer, CartSerializer
+    CategoryListSerializer, CommentCreateSerializer,
+    CommentListSerializer, CartSerializer
 )
 
 
