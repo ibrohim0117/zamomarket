@@ -50,6 +50,7 @@ class UserLoginSerializer(serializers.Serializer):
         # return super().validate(attrs)
 
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
