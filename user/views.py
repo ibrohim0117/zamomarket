@@ -49,7 +49,7 @@ class VerifyUserAPIView(APIView):
         serializer = UserConfirmationSerializer(data=request.data)
         if serializer.is_valid():
             code = serializer.validated_data.get('code')
-            print(user, code)
+            # print(user, code)
             self.check_verify_code(user, code)
             return Response(
                 data={
@@ -65,7 +65,7 @@ class VerifyUserAPIView(APIView):
     def check_verify_code(user, code):
         # print(user.codes.all())
         verifies = user.codes.filter(expiration_time__gte=timezone.now(), code=code, is_confirmed=False)
-        print(verifies.exists())
+        # print(verifies.exists())
         if not verifies.exists():
             data = {
                 'message': 'Tasdiqlash kodi xato yoki eskirgan'
