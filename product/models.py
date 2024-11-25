@@ -107,6 +107,10 @@ class Cart(BaseCreatedModel):
     def __str__(self):
         return f'{self.product}'
 
+    class Meta:
+        verbose_name_plural = 'Savat'
+        verbose_name_plural = 'Savatlar'
+
 
 
 
