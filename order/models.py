@@ -25,7 +25,25 @@ class Order(BaseCreatedModel):
 
 
 class OrderItem(BaseCreatedModel):
-    pass
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey('product.Product', on_delete=models.CASCADE, related_name='products')
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    @property
+    def total_price(self):
+        return self.quantity * self.price
+
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.product.price
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Product: {self.product.name}, Order: {self.order.id}"
+
+
+
 
 
 
