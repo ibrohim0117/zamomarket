@@ -16,7 +16,7 @@ class Order(BaseCreatedModel):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def calculate_total_price(self):
-        total = sum(item.total_price for item in self.items.all())
+        total = sum(item.total_price for item in self.order_items.all())
         self.total_price = total
         self.save()
 
@@ -28,7 +28,7 @@ class OrderItem(BaseCreatedModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey('product.Product', on_delete=models.CASCADE, related_name='products')
     quantity = models.IntegerField(validators=[MinValueValidator(1)])
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     @property
     def total_price(self):
