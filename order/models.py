@@ -5,10 +5,7 @@ from user.models import BaseCreatedModel
 
 
 class Order(BaseCreatedModel):
-
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='orders')
-    product = models.ForeignKey('product.Product', on_delete=models.CASCADE, related_name='orders')
-    quantity = models.IntegerField(validators=[MinValueValidator(1)])
     status = models.CharField(max_length=20, choices=[
             ('pending', 'Pending'),
             ('completed', 'Completed'),
@@ -16,13 +13,19 @@ class Order(BaseCreatedModel):
         ],
         default='pending'
     )
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    @property
-    def total_price(self):
-        self.product.price * self.quantity
+    def calculate_total_price(self):
+        total = sum(item.total_price for item in self.items.all())
+        self.total_price = total
+        self.save()
 
     def __str__(self):
-        return self.product.name
+        return self.user
+
+
+class OrderItem(BaseCreatedModel):
+    pass
 
 
 
