@@ -42,6 +42,12 @@ class OrderListSerializer(ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 
+class OrderUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+
 
 
 

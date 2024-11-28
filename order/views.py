@@ -1,11 +1,10 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView, status
-
 from .models import Order
 from .serializers import (
     OrderCreateSerializer, OrderItemSerializer,
-    OrderListSerializer,
+    OrderListSerializer, OrderUpdateSerializer
 )
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import get_object_or_404, ListAPIView
@@ -53,6 +52,21 @@ class OrderListView(ListAPIView):
             return qs
         else:
             return qs.filter(user=user)
+
+
+class OrderStatusUpdateView(APIView):
+    permission_classes = [IsAdminUser]
+
+    @extend_schema(
+        request=OrderUpdateSerializer,
+    )
+    def patch(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        serializer = OrderUpdateSerializer(order, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
