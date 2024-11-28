@@ -36,6 +36,12 @@ class OrderItemSerializer(ModelSerializer):
         return order_item
 
 
+class OrderListSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        exclude = ['created_at', 'updated_at']
+
+
 
 
 

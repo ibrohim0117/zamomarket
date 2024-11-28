@@ -3,9 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView, status
 
 from .models import Order
-from .serializers import OrderCreateSerializer, OrderItemSerializer
+from .serializers import (
+    OrderCreateSerializer, OrderItemSerializer,
+    OrderListSerializer,
+)
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
+
 
 class OrderCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -36,4 +40,20 @@ class OrderItemCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderListSerializer
+
+    def get_queryset(self):
+        qs =  Order.objects.all()
+        user = self.request.user
+        if user.is_staff:
+            return qs
+        else:
+            return qs.filter(user=user)
+
+
+
 
