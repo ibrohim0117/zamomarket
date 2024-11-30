@@ -24,6 +24,7 @@ class Order(BaseCreatedModel):
         return self.user.username
 
 
+
 class OrderItem(BaseCreatedModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey('product.Product', on_delete=models.CASCADE, related_name='products')
